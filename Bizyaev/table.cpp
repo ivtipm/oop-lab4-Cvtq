@@ -113,25 +113,27 @@ void Table::resize(const size_t &rows, const size_t &columns){
 }
 
 // Сортировка
-void Table::sort(int column, Qt::SortOrder direction){
-    QStringList list;
-    for (int i=0; i<this->rowCount(); i++){
-        list.append(this->_table[i][column].data.toString());
-    }
-    list.sort();
-    if (direction == Qt::AscendingOrder) {
-        // по возрастанию
+void Table::sort(int column, Qt::SortOrder direction){    
+    if ((column >=0) && (column < _table[0].size())){
+        QStringList list;
         for (int i=0; i<this->rowCount(); i++){
-            this->_table[i][column].data = list[i];
+            list.append(this->_table[i][column].data.toString());
         }
-    } else
-        if (direction == Qt::DescendingOrder) {
-        //по убыванию
-        for (int i=0; i<this->rowCount(); i++){
-            this->_table[i][column].data = list[this->rowCount() - i - 1];
+        list.sort();
+        if (direction == Qt::AscendingOrder) {
+            // по возрастанию
+            for (int i=0; i<this->rowCount(); i++){
+                this->_table[i][column].data = list[i];
+            }
+        } else
+            if (direction == Qt::DescendingOrder) {
+            //по убыванию
+            for (int i=0; i<this->rowCount(); i++){
+                this->_table[i][column].data = list[this->rowCount() - i - 1];
+            }
         }
+        this->resetModel();
     }
-    this->resetModel();
 }
 
 // Resets model for viewers

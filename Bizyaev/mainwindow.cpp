@@ -64,6 +64,7 @@ MainWindow::~MainWindow()
 
 // Вызываем метод сортировки у таблицы
 void MainWindow::sort(int column){
+    this->addUndoAction();
     Qt::SortOrder direction = ui->tableView->horizontalHeader()->sortIndicatorOrder();
     this->table->sort(column, direction);
 
@@ -92,15 +93,20 @@ void MainWindow::undo(){
 // Обновляет данные о выделении в статус-баре
 void MainWindow::updateSelection(){
     QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
-    QModelIndex indexF = indexes.first();
-    QModelIndex indexL = indexes.last();
-    if (indexF == indexL){
-        this->tableSelection->setText(QString("Selection: ") + QString::number(indexF.row() + 1) + QString(":") + QString::number(indexF.column() + 1));
+    if (!indexes.empty()){
+        QModelIndex indexF = indexes.first();
+        QModelIndex indexL = indexes.last();
+        if (indexF == indexL){
+            this->tableSelection->setText(QString("Selection: ") + QString::number(indexF.row() + 1) + QString(":") + QString::number(indexF.column() + 1));
+        }
+        else{
+            this->tableSelection->setText(QString("Selection: ") + QString::number(indexF.row() + 1) + QString("-") + QString::number(indexF.column() + 1) + QString(":") +
+                                          QString::number(indexL.row() + 1) + QString("-") + QString::number(indexL.column() + 1));
+        }
     }
-    else{
-        this->tableSelection->setText(QString("Selection: ") + QString::number(indexF.row() + 1) + QString("-") + QString::number(indexF.column() + 1) + QString(":") +
-                                      QString::number(indexL.row() + 1) + QString("-") + QString::number(indexL.column() + 1));
-    }
+    else {
+            this->tableSelection->setText(QString("Selection: - "));
+        }
 }
 
 // Очищает все ячеки, находящиеся в выделении

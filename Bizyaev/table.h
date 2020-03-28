@@ -73,7 +73,8 @@ public:
     // Функция для дебага - выводит таблицу в консоль
     void print() const;
 
-public: signals: void resized();
+public: signals:
+    void resized();
 
 };
 
